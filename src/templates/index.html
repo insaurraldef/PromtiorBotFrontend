@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promtior Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .chat-container {
+            width: 400px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .chat-header img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .chat-box {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            height: 200px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .user-message, .bot-response {
+            margin-bottom: 10px;
+        }
+
+        .user-message {
+            text-align: right;
+            color: #007bff;
+        }
+
+        .bot-response {
+            text-align: left;
+            color: #333;
+        }
+
+        .input-group {
+            display: flex;
+        }
+
+        .input-group input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 4px 0 0 4px;
+            border: 1px solid #ddd;
+        }
+
+        .input-group button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            background-color: #007bff;
+            color: #ffffff;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .input-group button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="/src/staticng" alt="Company Logo">
+            Promtior Chatbot
+        </div>
+        <div id="chat-box" class="chat-box">
+        </div>
+        <div class="input-group">
+            <input type="text" id="user-input" placeholder="Ask a question" autocomplete="off">
+            <button onclick="sendMessage()">Ask</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const chatBox = document.getElementById('chat-box');
+
+            if (userInput.value.trim() === '') return;
+
+            // Display user message
+            const userMessage = document.createElement('div');
+            userMessage.classList.add('user-message');
+            userMessage.textContent = userInput.value;
+            chatBox.appendChild(userMessage);
+
+            // Send user message to the server
+            const response = await fetch('http://localhost:8000/chatbot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ input: userInput.value })
+            });
+
+            // Clear user input field
+            userInput.value = '';
+
+            if (response.ok) {
+                const data = await response.json();
+
+                // Display bot response
+                const botResponse = document.createElement('div');
+                botResponse.classList.add('bot-response');
+                botResponse.textContent = data.response;
+                chatBox.appendChild(botResponse);
+
+                // Scroll chat box to the bottom
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } else {
+                console.error('Error:', response.statusText);
+            }
+        }
+    </script>
+</body>
+</html>
