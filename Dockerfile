@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5000
 
 # Set the command to run the Flask app
-CMD ["python3", "src/app.py"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "src.app:app"]
