@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, jsonify
 import requests
 from flask.cli import load_dotenv
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', template_folder='templates')
 load_dotenv()
 backend_url = os.getenv("BACKEND_URL")
 
