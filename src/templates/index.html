@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Promtior Chatbot</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -118,7 +119,7 @@
             chatBox.appendChild(userMessage);
 
             // Send user message to the server
-            const response = await fetch('http://localhost:8000/chatbot', {
+            const response = await fetch('/ask', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
